@@ -193,19 +193,19 @@ footer {
 }
 
 @media only screen and (max-width: 768px) {
-  /* Mengatur ulang lebar container dan form agar pas di layar HP */
-  .container, form[name="presensi-form"], .main-content {
-      width: 95% !important;       /* Gunakan 95% lebar layar HP */
-      max-width: 100% !important;  /* Jangan biarkan melebihi layar */
-      margin: 0 auto !important;   /* Posisi tengah */
-      padding-left: 10px;          /* Jarak aman kiri */
-      padding-right: 10px;         /* Jarak aman kanan */
-      box-sizing: border-box;      /* Pastikan padding tidak menambah lebar total */
-  }
+    /* Mengatur ulang lebar container dan form agar pas di layar HP */
+    .container, form[name="presensi-form"], .main-content {
+        width: 95% !important;       /* Gunakan 95% lebar layar HP */
+        max-width: 100% !important;  /* Jangan biarkan melebihi layar */
+        margin: 1rem auto !important;   /* Posisi tengah dengan jarak vertikal */
+        padding-left: 10px;          /* Jarak aman kiri */
+        padding-right: 10px;         /* Jarak aman kanan */
+        box-sizing: border-box;      /* Pastikan padding tidak menambah lebar total */
+    }
 
-  /* Opsional: Memastikan peta tidak overflow */
-  #map {
-      width: 100% !important;
-      max-width: 100% !important;
-  }
+    /* Opsional: Memastikan peta tidak overflow */
+    #map {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
