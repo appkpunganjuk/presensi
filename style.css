@@ -1,0 +1,193 @@
+body {
+  font-family: sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column; /* Change to column for footer */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-image: url('web-bg.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.75); /* Semi-transparent background */
+  backdrop-filter: blur(8px); /* Blur effect */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  margin-top: 2rem; /* Add margin to top */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.logo {
+  height: 100px; /* Adjust the height as needed */
+  margin-bottom: 0.5rem; /* Reduced margin */
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2.5rem;
+}
+
+.map-container {
+  position: relative;
+}
+
+#map {
+  height: 200px;
+  margin-bottom: 0.5rem; /* Reduced margin */
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.reload-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 401; /* Above the map */
+  background-color: #800000; /* Maroon background */
+  color: white;
+  border: 1px solid #660000;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.reload-button:hover {
+  background-color: #660000; /* Darker maroon on hover */
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+select, button, input[type="text"], textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+select:focus, button:focus, input[type="text"]:focus, textarea:focus {
+  outline: none;
+  border-color: #800000; /* Maroon focus */
+  box-shadow: 0 0 0 2px rgba(128, 0, 0, 0.25);
+}
+
+textarea {
+  resize: vertical;
+  background-color: #e9ecef;
+  color: #495057;
+  cursor: default;
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.radio-group input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.radio-group label {
+  display: inline-block;
+  background-color: #e9ecef;
+  padding: 0.75rem 1.25rem;
+  font-weight: normal;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.radio-group input[type="radio"]:checked + label {
+  background-color: #800000; /* Maroon for selected status */
+  color: white;
+}
+
+/* General button style - specifically for the Submit button */
+button[type="submit"] {
+  background-color: #800000; /* Maroon background */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Space between icon and text */
+}
+
+button[type="submit"]:hover {
+  background-color: #660000; /* Darker maroon on hover */
+}
+
+
+/* Searchable Dropdown Styles */
+.search-container {
+  position: relative;
+}
+
+#search-results {
+  display: none;
+  position: absolute;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #fff;
+  z-index: 1000;
+}
+
+.search-item {
+  padding: 0.75rem;
+  cursor: pointer;
+}
+
+.search-item:hover {
+  background-color: #f0f0f0;
+}
+
+.search-item.selected {
+  background-color: #800000; /* Maroon for selected item */
+  color: white;
+}
+
+footer {
+  margin-top: auto;
+  padding: 1.5rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  font-size: 0.9rem;
+}

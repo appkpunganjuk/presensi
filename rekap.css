@@ -1,0 +1,111 @@
+/* Gaya khusus untuk halaman rekap */
+
+/* Mengatur ulang beberapa gaya dari style.css agar lebih sesuai untuk halaman rekap */
+.container {
+  width: 90vw; /* 90% dari lebar viewport */
+  max-width: none;
+  height: 90vh; /* 90% dari tinggi viewport */
+  display: flex;
+  flex-direction: column; /* Mengatur item secara vertikal */
+}
+
+/* Judul Halaman Rekap */
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Gaya untuk Alert LKH */
+.lkh-alert {
+  background-color: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffecb5;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.lkh-alert a {
+  color: #0d6efd;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.lkh-alert a:hover {
+  color: #0a58ca;
+}
+
+.table-container {
+  width: 100%;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  flex-grow: 1;
+}
+
+#rekap-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+#rekap-table th, #rekap-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* Mengembalikan hanya border bawah */
+  white-space: nowrap;
+  vertical-align: middle; /* Memastikan badge berada di tengah sel */
+}
+
+/* Gaya Header Tabel */
+#rekap-table th {
+  background-color: #800000; /* Merah marun */
+  color: white; /* Teks putih */
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#rekap-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#rekap-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+#loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+#loading-spinner .fa-spinner {
+  margin-right: 0.5rem;
+}
+
+/* --- GAYA BARU UNTUK BADGE LKH --- */
+.badge {
+  display: inline-block;
+  padding: 0.5em 0.75em;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem; /* Sudut membulat */
+}
+
+.badge-success {
+  color: #fff; /* Teks putih */
+  background-color: #198754; /* Latar hijau */
+}

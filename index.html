@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presensi Pegawai</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href='style.css' rel='stylesheet'>
+  <!-- SweetAlert2 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+  <div class="container">
+    <img src="LOGO_KPU.png" alt="Logo KPU" class="logo">
+    <h1>PRESENSI PEGAWAI KPU NGANJUK</h1>
+    <form id="presensi-form">
+      <div class="form-group">
+        <label for="map">Lokasi Presensi:</label>
+        <div class="map-container">
+          <div id="map"></div>
+          <button type="button" id="reload-location" class="reload-button">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+        <textarea id="alamat" name="alamat" rows="3" readonly placeholder="Alamat akan terisi otomatis berdasarkan lokasi Anda..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="search-pegawai">Nama Pegawai:</label>
+        <div class="search-container">
+          <input type="text" id="search-pegawai" placeholder="Klik atau ketik untuk mencari nama...">
+          <div id="search-results"></div>
+          <input type="hidden" id="nama-pegawai" name="nama-pegawai">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Kehadiran:</label>
+        <div class="radio-group">
+          <input type="radio" id="datang" name="kehadiran" value="DATANG">
+          <label for="datang">DATANG</label>
+          <input type="radio" id="pulang" name="kehadiran" value="PULANG">
+          <label for="pulang">PULANG</label>
+          <input type="radio" id="dinas-luar" name="kehadiran" value="DINAS LUAR">
+          <label for="dinas-luar">DINAS LUAR</label>
+          <input type="radio" id="wfh-wfa" name="kehadiran" value="WFH/WFA">
+          <label for="wfh-wfa">WFH/WFA</label>
+        </div>
+      </div>
+      <button type="submit">
+        <i class="fa-solid fa-paper-plane"></i> Kirim
+      </button>
+    </form>
+  </div>
+  <footer>
+    KPU Kabupaten Nganjuk &copy; <span id="current-year"></span>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer type="text/javascript" src="main.js"></script>
+</body>
+</html>
