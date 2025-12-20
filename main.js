@@ -42,7 +42,11 @@ function onLocationFound(e) {
 }
 
 function onLocationError(e) {
-    alert("Tidak bisa mendapatkan lokasi Anda. Pastikan Anda mengizinkan akses lokasi.");
+    Swal.fire({
+        title: 'Gagal',
+        text: 'Tidak bisa mendapatkan lokasi Anda. Pastikan Anda mengizinkan akses lokasi.',
+        icon: 'error'
+    });
     alamatTextarea.value = "Lokasi tidak dapat diakses.";
 }
 
