@@ -48,7 +48,8 @@ function onLocationError(e) {
     Swal.fire({
         title: 'Gagal',
         text: 'Tidak bisa mendapatkan lokasi Anda. Pastikan Anda mengizinkan akses lokasi.',
-        icon: 'error'
+        icon: 'error',
+        confirmButtonColor: '#800000'
     });
     alamatTextarea.value = "Lokasi tidak dapat diakses.";
 }
@@ -135,6 +136,7 @@ form.addEventListener('submit', (e) => {
                     title: 'Selesai!',
                     text: 'Data presensi Anda telah terekam...',
                     icon: 'success'
+                    confirmButtonColor: '#800000'
                 }).then(() => {
                     window.location.href = 'rekap.html';
                 });
@@ -144,9 +146,17 @@ form.addEventListener('submit', (e) => {
                     if (data && data.error) {
                         errorMessage += `\nDetail: ${data.error}`;
                     }
-                    Swal.fire('Gagal', errorMessage, 'error');
+                    Swal.fire({
+                    title: 'Gagal!',
+                    text: errorMessage,
+                    icon: 'error'
+                    confirmButtonColor: '#800000'
                 }).catch(() => {
-                    Swal.fire('Gagal', 'Gagal mengirim presensi karena kesalahan server.', 'error');
+                    Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Gagal mengirim presensi karena kesalahan server...',
+                    icon: 'error'
+                    confirmButtonColor: '#800000'
                 });
             }
         })
