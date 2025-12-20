@@ -9,7 +9,10 @@ const reloadLocationButton = document.getElementById('reload-location');
 const scriptURL = 'https://script.google.com/macros/s/AKfycbyvxPCCJFv6QdD9BKsb2_DiL0UJG0wAQwlrHACafSP4BZhj7Z9Ilm13F9feeDxUMb0_IQ/exec';
 
 // Initialize map
-const map = L.map('map').setView([-7.6035, 111.9011], 13); // Default view (Nganjuk)
+const map = L.map('map', {
+    dragging: !L.Browser.mobile,          // Matikan geser peta (panning) hanya di HP
+    touchZoom: L.Browser.mobile ? 'center' : true // Zoom selalu fokus ke tengah di HP
+}).setView([-7.6035, 111.9011], 13); // Default view (Nganjuk)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
