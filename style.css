@@ -198,6 +198,7 @@ footer {
         width: 95% !important;       /* Gunakan 95% lebar layar HP */
         max-width: 100% !important;  /* Jangan biarkan melebihi layar */
         margin: 1rem auto !important;   /* Posisi tengah dengan jarak vertikal */
+        padding-top: 10px;
         padding-left: 10px;          /* Jarak aman kiri */
         padding-right: 10px;         /* Jarak aman kanan */
         box-sizing: border-box;      /* Pastikan padding tidak menambah lebar total */
