@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const rekapTitle = document.getElementById('rekap-title');
   const currentYearSpan = document.getElementById('current-year');
   const scriptURL = 'https://script.google.com/macros/s/AKfycby6jn7djxi1VCPWeXjwr4nILG9gxIRS-L4W3UdOijfDvELXLr_iEenZFIrQ729ygKO0/exec';
+  const modal = document.getElementById('petaModal');
+  const modalFrame = document.getElementById('petaFrame');
+  const closeModal = document.querySelector('.close-modal');
 
   const mode = "REGULAR"; // Pilihan: "REGULAR" atau "RAMADHAN"
 
@@ -22,6 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setDynamicTitle();
+
+  // Modal Logic
+  if (closeModal) {
+    closeModal.onclick = () => {
+      modal.style.display = "none";
+      modalFrame.src = "";
+    };
+  }
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      modalFrame.src = "";
+    }
+  };
 
   function calculateJamPulang(waktuDatang, hariKe) {
     let jamPulang = new Date(waktuDatang.getTime());
@@ -62,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       loadingSpinner.style.display = 'none';
       tableBody.innerHTML = '';
+      console.log(data)
 
       if (data.length > 0) {
         // --- PERBAIKAN: Mengurutkan data secara kronologis (paling awal di atas) ---
@@ -87,6 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
             lkhCell.textContent = row.LKH;
           }
           
+          const petaCell = newRow.insertCell();
+          // Asumsi: Key JSON dari Google Sheet adalah 'PETA_URL'
+          if (row.PETA_URL) {
+            const btn = document.createElement('button');
+            btn.className = 'btn-peta';
+            btn.innerHTML = '<i class="fa-solid fa-map-location-dot"></i>';
+            btn.onclick = () => {
+              modal.style.display = "flex";
+              modalFrame.src = row.PETA_URL;
+            };
+            petaCell.appendChild(btn);
+          } else {
+            petaCell.textContent = '-';
+          }
+
           const jamPulangCell = newRow.insertCell();
           let jamPulangStr = '-';
 

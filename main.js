@@ -3,6 +3,7 @@ const namaPegawai = ["KRISTANTO", "MUHAMMAD IMAM SUBKHI", "AMINODIN", "DWI RIYAN
 const searchInput = document.getElementById('search-pegawai');
 const searchResults = document.getElementById('search-results');
 const hiddenInput = document.getElementById('nama-pegawai');
+const petaUrlInput = document.getElementById('peta-url');
 const form = document.forms['presensi-form'];
 const alamatTextarea = document.getElementById('alamat');
 const reloadLocationButton = document.getElementById('reload-location');
@@ -42,6 +43,16 @@ function onLocationFound(e) {
     marker = L.marker(latlng).addTo(map).bindPopup("Lokasi Anda saat ini").openPopup();
     map.setView(latlng, 16); // Zoom to user's location
     getAddress(latlng.lat, latlng.lng);
+
+    if (petaUrlInput) {
+        // Membuat URL Embed OpenStreetMap agar konsisten dengan Leaflet
+        // Menghitung bounding box (area kotak) sekitar lokasi untuk zoom level ~16
+        const offset = 0.002; // Offset koordinat untuk area sekitar 200-300m
+        const bbox = `${latlng.lng - offset},${latlng.lat - offset},${latlng.lng + offset},${latlng.lat + offset}`;
+        
+        // Format URL: bbox=minLon,minLat,maxLon,maxLat & marker=lat,lon
+        petaUrlInput.value = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${latlng.lat},${latlng.lng}`;
+    }
 }
 
 function onLocationError(e) {
