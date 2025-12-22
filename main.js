@@ -20,17 +20,25 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let marker;
 
 async function getAddress(lat, lon) {
+    // Generate Google Plus Code (Open Location Code)
+    let plusCode = '';
+    if (typeof OpenLocationCode !== 'undefined') {
+        plusCode = OpenLocationCode.encode(lat, lon);
+    }
+
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
         const data = await response.json();
         if (data && data.display_name) {
-            alamatTextarea.value = data.display_name;
+            // Prepend the Plus Code to the address
+            alamatTextarea.value = plusCode ? `${plusCode} - ${data.display_name}` : data.display_name;
         } else {
-            alamatTextarea.value = "Alamat tidak ditemukan.";
+            alamatTextarea.value = plusCode ? `${plusCode} - Alamat tidak ditemukan.` : "Alamat tidak ditemukan.";
         }
     } catch (error) {
         console.error('Error fetching address:', error);
-        alamatTextarea.value = "Gagal mengambil alamat.";
+        // If API fails, still show the Plus Code
+        alamatTextarea.value = plusCode ? `${plusCode} - Gagal mengambil alamat.` : "Gagal mengambil alamat.";
     }
 }
 
