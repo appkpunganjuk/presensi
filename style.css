@@ -133,6 +133,16 @@ textarea {
 }
 
 /* General button style - specifically for the Submit button */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.action-buttons > * {
+  flex: 1;
+  min-height: 48px;
+}
+
 button[type="submit"] {
   background-color: #800000; /* Maroon background */
   color: white;
@@ -148,6 +158,30 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #660000; /* Darker maroon on hover */
+}
+
+.secondary-button {
+  background-color: #0b3d91; /* Navy blue background */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  font-family: sans-serif;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+.secondary-button:hover {
+  background-color: #082f6d;
 }
 
 
@@ -208,5 +242,9 @@ footer {
     #map {
         width: 100% !important;
         max-width: 100% !important;
+    }
+
+    .action-buttons {
+        flex-direction: column;
     }
 }
