@@ -5,8 +5,7 @@ function escapeHTML(str) {
     return div.innerHTML;
 }
 
-const namaPegawai = ["KRISTANTO", "MUHAMMAD IMAM SUBKHI", "AMINODIN", "DWI RIYANTO YUWONO", "ANANG SUBEKTI", "IMAM WAHYUDI", "WIJI RAHAYU", "TITAN TAWANG ILAL BILLHAQQI", "ALFA ALFIN MAGHFIROH", "WISNU PURNAMA", "SYAHRINDRA DZAKY RAMADHAN", "ANITA ROSANTI", "FATKUR ROZIKIN", "LINDA RISTIANI", "HENI RIASTUTIK", "ANANG ASY'ARI", "JASWADI", "AFRAN EFFENDI", "SEPTYAN WAHYU NUGROHO", "M. MIRZA SULTHONI", "SATRIO ADI WINUGROHO", "SEPTIAN RENDY CHARISMA PUTRA", "BELLA ANGGRAINI PUSPITA SARI", "JADMIKO", "SUGIANTO", "AGUS PRAYITNO", "TRIYONO", "JARMO", "TONI NURHUDA", "MUHAMMAD NOVAL FAJRUL HUDA"];
-
+let namaPegawai = [];
 const searchInput = document.getElementById('search-pegawai');
 const searchResults = document.getElementById('search-results');
 const hiddenInput = document.getElementById('nama-pegawai');
@@ -14,16 +13,37 @@ const petaUrlInput = document.getElementById('peta-url');
 const form = document.forms['presensi-form'];
 const alamatTextarea = document.getElementById('alamat');
 const reloadLocationButton = document.getElementById('reload-location');
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyvxPCCJFv6QdD9BKsb2_DiL0UJG0wAQwlrHACafSP4BZhj7Z9Ilm13F9feeDxUMb0_IQ/exec';
+
+// FASE 6: Load data pegawai dari file JSON terpisah
+async function loadPegawaiData() {
+    try {
+        const response = await fetch(CONFIG.PEGAWAI_JSON_URL);
+        if (!response.ok) throw new Error('Gagal memuat data pegawai');
+        namaPegawai = await response.json();
+        initSearch();
+    } catch (error) {
+        console.error('Error loading pegawai data:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Gagal memuat data pegawai. Silakan refresh halaman.',
+            icon: 'error',
+            confirmButtonColor: '#800000'
+        });
+    }
+}
 
 // FASE 4: Local Storage - Memuat nama pegawai terakhir yang dipilih
-document.addEventListener('DOMContentLoaded', () => {
+function initSearch() {
     const savedName = localStorage.getItem('lastSelectedEmployee');
     if (savedName && namaPegawai.includes(savedName)) {
         searchInput.value = savedName;
         hiddenInput.value = savedName;
     }
-});
+    
+    updateResults();
+}
+
+loadPegawaiData();
 
 // Initialize map
 const map = L.map('map', {
@@ -37,6 +57,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let marker;
 
 const gpsStatus = document.getElementById('gps-status');
+const scriptURL = CONFIG.APPS_SCRIPT_URL;
 
 function updateGPSStatus(status, message) {
   if (!gpsStatus) return;
@@ -48,7 +69,7 @@ function updateGPSStatus(status, message) {
     gpsStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> GPS Aktif - Lokasi terkunci';
     gpsStatus.className = 'gps-status active';
   } else if (status === 'error') {
-    gpsStatus.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + message;
+    gpsStatus.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + escapeHTML(message);
     gpsStatus.className = 'gps-status error';
   }
 }
@@ -59,7 +80,7 @@ async function getAddress(lat, lon) {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
         const data = await response.json();
         if (data && data.display_name) {
-            alamatTextarea.value = data.display_name;
+            alamatTextarea.value = escapeHTML(data.display_name);
         } else {
             alamatTextarea.value = "Alamat tidak ditemukan.";
         }
@@ -84,60 +105,73 @@ function hideLoading() {
 }
 
 function onLocationFound(e) {
-    hideLoading();
-    const latlng = e.latlng;
-    if (marker) {
-        map.removeLayer(marker);
-    }
-    marker = L.marker(latlng).addTo(map).bindPopup("Lokasi Anda saat ini").openPopup();
-    map.setView(latlng, 16); // Zoom to user's location
-    getAddress(latlng.lat, latlng.lng);
-    updateGPSStatus('active');
+    try {
+        hideLoading();
+        const latlng = e.latlng;
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(latlng).addTo(map).bindPopup("Lokasi Anda saat ini").openPopup();
+        map.setView(latlng, CONFIG.MAP_DEFAULT_ZOOM);
+        getAddress(latlng.lat, latlng.lng);
+        updateGPSStatus('active');
 
-    if (petaUrlInput) {
-        // Membuat URL Embed OpenStreetMap agar konsisten dengan Leaflet
-        // Menghitung bounding box (area kotak) sekitar lokasi untuk zoom level ~16
-        const offset = 0.002; // Offset koordinat untuk area sekitar 200-300m
-        const bbox = `${latlng.lng - offset},${latlng.lat - offset},${latlng.lng + offset},${latlng.lat + offset}`;
-        
-        // Format URL: bbox=minLon,minLat,maxLon,maxLat & marker=lat,lon
-        petaUrlInput.value = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${latlng.lat},${latlng.lng}`;
+        if (petaUrlInput) {
+            const offset = 0.002;
+            const bbox = `${latlng.lng - offset},${latlng.lat - offset},${latlng.lng + offset},${latlng.lat + offset}`;
+            petaUrlInput.value = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${latlng.lat},${latlng.lng}`;
+        }
+    } catch (error) {
+        console.error('Error in onLocationFound:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Gagal memproses lokasi Anda.',
+            icon: 'error',
+            confirmButtonColor: '#800000'
+        });
     }
 }
 
 function onLocationError(e) {
-    hideLoading();
-    // Menangani kasus ketika pengguna menolak izin lokasi
-    let errorMessage = 'Tidak bisa mendapatkan lokasi Anda.';
-    let displayMessage = 'Gagal mendapatkan lokasi';
-    
-    if (e.code === e.PERMISSION_DENIED) {
-        errorMessage = 'Mohon izinkan akses lokasi di browser Anda untuk melakukan presensi. Silakan refresh halaman dan berikan izin lokasi.';
-        displayMessage = 'Izin lokasi ditolak';
-    } else if (e.code === e.POSITION_UNAVAILABLE) {
-        errorMessage = 'Informasi lokasi tidak tersedia. Pastikan GPS Anda aktif.';
-        displayMessage = 'GPS tidak tersedia';
-    } else if (e.code === e.TIMEOUT) {
-        errorMessage = 'Waktu permintaan lokasi habis. Silakan coba lagi.';
-        displayMessage = 'Waktu habis';
+    try {
+        hideLoading();
+        let errorMessage = 'Tidak bisa mendapatkan lokasi Anda.';
+        let displayMessage = 'Gagal mendapatkan lokasi';
+        
+        if (e.code === e.PERMISSION_DENIED) {
+            errorMessage = 'Mohon izinkan akses lokasi di browser Anda untuk melakukan presensi. Silakan refresh halaman dan berikan izin lokasi.';
+            displayMessage = 'Izin lokasi ditolak';
+        } else if (e.code === e.POSITION_UNAVAILABLE) {
+            errorMessage = 'Informasi lokasi tidak tersedia. Pastikan GPS Anda aktif.';
+            displayMessage = 'GPS tidak tersedia';
+        } else if (e.code === e.TIMEOUT) {
+            errorMessage = 'Waktu permintaan lokasi habis. Silakan coba lagi.';
+            displayMessage = 'Waktu habis';
+        }
+        
+        updateGPSStatus('error', displayMessage);
+        
+        Swal.fire({
+            title: 'Gagal',
+            text: escapeHTML(errorMessage),
+            icon: 'error',
+            confirmButtonColor: '#800000'
+        });
+        alamatTextarea.value = "Lokasi tidak dapat diakses.";
+    } catch (error) {
+        console.error('Error in onLocationError:', error);
     }
-    
-    updateGPSStatus('error', displayMessage);
-    
-    Swal.fire({
-        title: 'Gagal',
-        text: errorMessage,
-        icon: 'error',
-        confirmButtonColor: '#800000'
-    });
-    alamatTextarea.value = "Lokasi tidak dapat diakses.";
 }
 
 function locateUser() {
-    showLoading();
-    alamatTextarea.value = "Mendeteksi lokasi...";
-    updateGPSStatus('searching');
-    map.locate({setView: true, maxZoom: 16});
+    try {
+        showLoading();
+        alamatTextarea.value = "Mendeteksi lokasi...";
+        updateGPSStatus('searching');
+        map.locate({setView: true, maxZoom: CONFIG.MAP_DEFAULT_ZOOM});
+    } catch (error) {
+        console.error('Error in locateUser:', error);
+    }
 }
 
 map.on('locationfound', onLocationFound);
@@ -146,27 +180,29 @@ reloadLocationButton.addEventListener('click', locateUser);
 document.addEventListener('DOMContentLoaded', locateUser);
 
 const updateResults = () => {
-    const query = searchInput.value.toUpperCase();
-    const filteredNames = namaPegawai.filter(name => name.toUpperCase().includes(query));
-    searchResults.innerHTML = ''; // Sudah aman karena tidak menggunakan innerHTML dengan user input langsung
-    if (filteredNames.length > 0) {
-        filteredNames.forEach(name => {
-            const item = document.createElement('div');
-            item.classList.add('search-item');
-            // Menggunakan textContent yang sudah aman dari XSS
-            item.textContent = escapeHTML(name);
-            item.addEventListener('click', () => {
-                searchInput.value = escapeHTML(name);
-                hiddenInput.value = escapeHTML(name);
-                // FASE 4: Local Storage - Simpan nama saat diklik dari dropdown
-                localStorage.setItem('lastSelectedEmployee', name);
-                searchResults.style.display = 'none';
+    try {
+        const query = searchInput.value.toUpperCase();
+        const filteredNames = namaPegawai.filter(name => name.toUpperCase().includes(query));
+        searchResults.innerHTML = '';
+        if (filteredNames.length > 0) {
+            filteredNames.forEach(name => {
+                const item = document.createElement('div');
+                item.classList.add('search-item');
+                item.textContent = escapeHTML(name);
+                item.addEventListener('click', () => {
+                    searchInput.value = escapeHTML(name);
+                    hiddenInput.value = escapeHTML(name);
+                    localStorage.setItem('lastSelectedEmployee', name);
+                    searchResults.style.display = 'none';
+                });
+                searchResults.appendChild(item);
             });
-            searchResults.appendChild(item);
-        });
-        searchResults.style.display = 'block';
-    } else {
-        searchResults.style.display = 'none';
+            searchResults.style.display = 'block';
+        } else {
+            searchResults.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error in updateResults:', error);
     }
 };
 
@@ -178,12 +214,15 @@ searchInput.addEventListener('input', () => {
     updateResults();
 });
 
-// FASE 4: Local Storage - Simpan nama pegawai saat dipilih dari dropdown
 searchInput.addEventListener('change', () => {
-    const selectedName = searchInput.value.trim();
-    if (selectedName && namaPegawai.includes(selectedName)) {
-        localStorage.setItem('lastSelectedEmployee', selectedName);
-        hiddenInput.value = selectedName;
+    try {
+        const selectedName = searchInput.value.trim();
+        if (selectedName && namaPegawai.includes(selectedName)) {
+            localStorage.setItem('lastSelectedEmployee', selectedName);
+            hiddenInput.value = escapeHTML(selectedName);
+        }
+    } catch (error) {
+        console.error('Error in change event:', error);
     }
 });
 
@@ -204,15 +243,30 @@ form.addEventListener('submit', (e) => {
 
     // Validation
     if (!data['nama-pegawai']) {
-        alert('Silakan pilih nama pegawai dari daftar.');
+        Swal.fire({
+            title: 'Peringatan',
+            text: 'Silakan pilih nama pegawai dari daftar.',
+            icon: 'warning',
+            confirmButtonColor: '#800000'
+        });
         return;
     }
     if (!data['kehadiran']) {
-        alert('Silakan pilih status kehadiran.');
+        Swal.fire({
+            title: 'Peringatan',
+            text: 'Silakan pilih status kehadiran.',
+            icon: 'warning',
+            confirmButtonColor: '#800000'
+        });
         return;
     }
     if (!data['alamat'] || data['alamat'] === 'Mendeteksi lokasi...' || data['alamat'] === 'Lokasi tidak dapat diakses.') {
-        alert('Lokasi belum berhasil dideteksi. Mohon tunggu atau muat ulang lokasi.');
+        Swal.fire({
+            title: 'Peringatan',
+            text: 'Lokasi belum berhasil dideteksi. Mohon tunggu atau muat ulang lokasi.',
+            icon: 'warning',
+            confirmButtonColor: '#800000'
+        });
         return;
     }
 
@@ -225,7 +279,6 @@ form.addEventListener('submit', (e) => {
             submitButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Presensi';
 
             if (response.ok) {
-                // FASE 4: Local Storage - Simpan nama pegawai yang dipilih
                 localStorage.setItem('lastSelectedEmployee', data['nama-pegawai']);
                 
                 Swal.fire({
@@ -240,11 +293,11 @@ form.addEventListener('submit', (e) => {
                 response.json().then(data => {
                     let errorMessage = 'Gagal mengirim presensi. Coba lagi.';
                     if (data && data.error) {
-                        errorMessage += `\nDetail: ${data.error}`;
+                        errorMessage += `\nDetail: ${escapeHTML(data.error)}`;
                     }
                     Swal.fire({
                         title: 'Gagal',
-                        text: errorMessage,
+                        text: escapeHTML(errorMessage),
                         icon: 'error',
                         confirmButtonColor: '#800000'
                     });
@@ -269,7 +322,7 @@ form.addEventListener('submit', (e) => {
                 confirmButtonColor: '#800000'
             });
         });
-    });
+});
 
 // Set current year in the footer
 document.getElementById('current-year').textContent = new Date().getFullYear();
