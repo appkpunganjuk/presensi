@@ -2,7 +2,7 @@ body {
   font-family: sans-serif;
   color: #333;
   display: flex;
-  flex-direction: column; /* Change to column for footer */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -11,44 +11,48 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container,
+footer {
+  position: relative;
+  z-index: 1;
 }
 
 .container {
-  background-color: rgba(255, 255, 255, 0.75); /* Semi-transparent background */
-  backdrop-filter: blur(8px); /* Blur effect */
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 500px;
   text-align: center;
-  margin-top: 2rem; /* Add margin to top */
+  margin-top: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.logo {
-  height: 100px; /* Adjust the height as needed */
-  margin-bottom: 0.5rem; /* Reduced margin */
-}
-
-h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 2.5rem;
-}
-
-.map-container {
-  position: relative;
-}
+.logo { height: 100px; margin-bottom: 0.5rem; }
+h1 { text-align: center; color: #333; margin-bottom: 2.5rem; }
+.map-container { position: relative; }
 
 #map {
   height: 200px;
-  margin-bottom: 0.5rem; /* Reduced margin */
+  margin-bottom: 0.5rem;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
 
-/* Loading spinner untuk proses lokasi */
 .location-loading {
   position: absolute;
   top: 50%;
@@ -64,32 +68,16 @@ h1 {
   color: #800000;
 }
 
-.location-loading.active {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.spinner {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #800000;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+.location-loading.active { display: flex; align-items: center; gap: 8px; }
+.spinner { border: 3px solid #f3f3f3; border-top: 3px solid #800000; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 .reload-button {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 401; /* Above the map */
-  background-color: #800000; /* Maroon background */
+  z-index: 401;
+  background-color: #800000;
   color: white;
   border: 1px solid #660000;
   border-radius: 50%;
@@ -102,214 +90,52 @@ h1 {
   font-size: 14px;
   transition: background-color 0.3s, color 0.3s;
 }
+.reload-button:hover { background-color: #660000; }
 
-.reload-button:hover {
-  background-color: #660000; /* Darker maroon on hover */
-}
-
-/* GPS Status Indicator */
 .gps-status {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  right: 10px;
+  bottom: 10px;
   z-index: 401;
+  width: 30px;
+  height: 30px;
   background: rgba(255, 255, 255, 0.9);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: 50%;
   color: #f39c12;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: color 0.2s, background-color 0.2s;
 }
+.gps-status.active { color: #27ae60; }
+.gps-status.error { color: #e74c3c; }
+.gps-status i { font-size: 15px; }
 
-.gps-status.active {
-  color: #27ae60;
-}
-
-.gps-status.error {
-  color: #e74c3c;
-}
-
-.gps-status i {
-  font-size: 14px;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-select, button, input[type="text"], textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  box-sizing: border-box;
-  font-family: sans-serif;
-}
-
-select:focus, button:focus, input[type="text"]:focus, textarea:focus {
-  outline: none;
-  border-color: #800000; /* Maroon focus */
-  box-shadow: 0 0 0 2px rgba(128, 0, 0, 0.25);
-}
-
-textarea {
-  resize: vertical;
-  background-color: #e9ecef;
-  color: #495057;
-  cursor: default;
-}
-
-.radio-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.radio-group input[type="radio"] {
-  opacity: 0;
-  position: fixed;
-  width: 0;
-}
-
-.radio-group label {
-  display: inline-block;
-  background-color: #e9ecef;
-  padding: 0.75rem 1.25rem;
-  font-weight: normal;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.radio-group input[type="radio"]:checked + label {
-  background-color: #800000; /* Maroon for selected status */
-  color: white;
-}
-
-/* General button style - specifically for the Submit button */
-.action-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-.action-buttons > * {
-  flex: 1;
-  min-height: 48px;
-}
-
-button[type="submit"] {
-  background-color: #800000; /* Maroon background */
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem; /* Space between icon and text */
-}
-
-button[type="submit"]:hover {
-  background-color: #660000; /* Darker maroon on hover */
-}
-
-.secondary-button {
-  background-color: #0b3d91; /* Navy blue background */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  font-family: sans-serif;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  box-sizing: border-box;
-  text-decoration: none;
-  line-height: 1.2;
-}
-
-.secondary-button:hover {
-  background-color: #082f6d;
-}
-
-
-/* Searchable Dropdown Styles */
-.search-container {
-  position: relative;
-}
-
-#search-results {
-  display: none;
-  position: absolute;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  max-height: 150px;
-  overflow-y: auto;
-  background-color: #fff;
-  z-index: 1000;
-}
-
-.search-item {
-  padding: 0.75rem;
-  cursor: pointer;
-}
-
-.search-item:hover {
-  background-color: #f0f0f0;
-}
-
-.search-item.selected {
-  background-color: #800000; /* Maroon for selected item */
-  color: white;
-}
-
-footer {
-  margin-top: auto;
-  padding: 1.5rem;
-  text-align: center;
-  color: #fff;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-  font-size: 0.9rem;
-}
+.form-group { margin-bottom: 1.5rem; text-align: left; }
+label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+select, button, input[type="text"], textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; font-family: sans-serif; }
+select:focus, button:focus, input[type="text"]:focus, textarea:focus { outline: none; border-color: #800000; box-shadow: 0 0 0 2px rgba(128, 0, 0, 0.25); }
+textarea { resize: vertical; background-color: #e9ecef; color: #495057; cursor: default; }
+.radio-group { display: flex; flex-wrap: wrap; gap: 1rem; }
+.radio-group input[type="radio"] { opacity: 0; position: fixed; width: 0; }
+.radio-group label { display: inline-block; background-color: #e9ecef; padding: 0.75rem 1.25rem; font-weight: normal; border-radius: 4px; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+.radio-group input[type="radio"]:checked + label { background-color: #800000; color: white; }
+.action-buttons { display: flex; gap: 1rem; }
+.action-buttons > * { flex: 1; min-height: 48px; }
+button[type="submit"] { background-color: #800000; color: white; border: none; cursor: pointer; font-weight: bold; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+button[type="submit"]:hover { background-color: #660000; }
+.secondary-button { background-color: #0b3d91; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; font-family: sans-serif; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem; box-sizing: border-box; text-decoration: none; line-height: 1.2; }
+.secondary-button:hover { background-color: #082f6d; }
+.search-container { position: relative; }
+#search-results { display: none; position: absolute; width: 100%; border: 1px solid #ccc; border-top: none; border-radius: 0 0 4px 4px; max-height: 150px; overflow-y: auto; background-color: #fff; z-index: 1000; }
+.search-item { padding: 0.75rem; cursor: pointer; }
+.search-item:hover { background-color: #f0f0f0; }
+.search-item.selected { background-color: #800000; color: white; }
+footer { margin-top: auto; padding: 1.5rem; text-align: center; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-size: 0.9rem; }
 
 @media only screen and (max-width: 768px) {
-    /* Mengatur ulang lebar container dan form agar pas di layar HP */
-    .container, form[name="presensi-form"], .main-content {
-        width: 95% !important;       /* Gunakan 95% lebar layar HP */
-        max-width: 100% !important;  /* Jangan biarkan melebihi layar */
-        margin: 1rem auto !important;   /* Posisi tengah dengan jarak vertikal */
-        padding-top: 10px;
-        padding-left: 10px;          /* Jarak aman kiri */
-        padding-right: 10px;         /* Jarak aman kanan */
-        box-sizing: border-box;      /* Pastikan padding tidak menambah lebar total */
-    }
-
-    /* Opsional: Memastikan peta tidak overflow */
-    #map {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .action-buttons {
-        flex-direction: column;
-    }
+  .container { width: 95% !important; max-width: 100% !important; margin: 1rem auto !important; padding: 10px; box-sizing: border-box; }
+  #map { width: 100% !important; max-width: 100% !important; }
+  .action-buttons { flex-direction: column; }
 }
