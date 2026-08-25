@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://nominatim.openstreetmap.org https://script.google.com https://script.googleusercontent.com https://unpkg.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src 'self' https://nominatim.openstreetmap.org https://script.google.com https://script.googleusercontent.com https://unpkg.com https://challenges.cloudflare.com;">
     <link rel="icon" type="image/x-icon" href="LOGO_KPU.webp" />
     <title>Presensi Pegawai</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -50,6 +50,9 @@
             <input type="radio" id="wfh-wfa-selesai" name="kehadiran" value="WFH/ WFA SELESAI" /><label for="wfh-wfa-selesai">WFH/ WFA SELESAI</label>
           </div>
         </div>
+        <div class="form-group turnstile-group">
+          <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAEbv35t8ZxqHp11-" data-theme="auto"></div>
+        </div>
         <div class="action-buttons">
           <button type="submit"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
           <a href="rekap.html" class="secondary-button" target="_blank"><i class="fa-solid fa-table-list"></i> Rekap</a>
@@ -59,6 +62,7 @@
     <footer>KPU Kabupaten Nganjuk &copy; <span id="current-year"></span></footer>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script defer type="text/javascript" src="config.js"></script>
     <script defer type="text/javascript" src="main.js"></script>
   </body>
