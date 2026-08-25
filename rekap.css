@@ -113,26 +113,31 @@ h1 {
 /* Filter Controls Styles */
 .filter-controls {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Jangan wrap, tetap satu baris */
   gap: 1rem;
   margin-bottom: 1rem;
-  align-items: stretch; /* Semua item punya tinggi sama */
+  align-items: center; /* Semua item center vertikal */
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #dee2e6;
 }
 
-.filter-group {
+.filter-item {
   display: flex;
   flex-direction: row; /* Label dan select sejajar horizontal */
   align-items: center; /* Vertikal center */
   gap: 0.75rem;
-  flex: 1 1 300px; /* Flex grow, shrink, basis */
-  min-width: 300px;
+  flex: 1 1 0; /* Bagi rata ruang tersedia */
+  min-width: 0; /* Izinkan shrink */
 }
 
-.filter-group label {
+.filter-item.btn-wrapper {
+  justify-content: flex-end; /* Tombol di kanan */
+  flex: 0 0 auto; /* Jangan grow, ukuran sesuai konten */
+}
+
+.filter-item label {
   font-weight: 600;
   color: #495057;
   font-size: 0.9rem;
@@ -140,7 +145,7 @@ h1 {
   min-width: 100px; /* Lebar minimum label */
 }
 
-.filter-group select {
+.filter-item select {
   padding: 0.6rem 0.75rem;
   border: 1px solid #ced4da;
   border-radius: 4px;
@@ -153,7 +158,7 @@ h1 {
   height: 42px; /* Tinggi eksplisit */
 }
 
-.filter-group select:focus {
+.filter-item select:focus {
   outline: none;
   border-color: #800000;
   box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
@@ -175,8 +180,6 @@ h1 {
   gap: 0.5rem;
   height: 42px; /* Samakan tinggi dengan select */
   white-space: nowrap;
-  flex: 0 0 auto; /* Jangan grow/shrink */
-  margin-top: 0; /* Pastikan tidak ada margin atas */
 }
 
 .btn-reload:hover {
@@ -193,8 +196,12 @@ h1 {
     flex-direction: column;
   }
   
-  .filter-group {
+  .filter-item {
     width: 100%;
+  }
+  
+  .filter-item.btn-wrapper {
+    justify-content: center;
   }
   
   .btn-reload {
