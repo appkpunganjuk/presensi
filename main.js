@@ -211,6 +211,13 @@ const updateResults = () => {
 };
 
 searchInput.addEventListener('focus', updateResults);
+searchInput.addEventListener('click', () => {
+    if (hiddenInput.value && searchInput.value === hiddenInput.value) {
+        searchInput.value = '';
+        hiddenInput.value = '';
+    }
+    updateResults();
+});
 searchInput.addEventListener('input', () => {
     if (searchInput.value.toUpperCase() !== hiddenInput.value.toUpperCase()) hiddenInput.value = '';
     updateResults();
