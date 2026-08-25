@@ -112,40 +112,34 @@ h1 {
 
 /* Filter Controls Styles */
 .filter-controls {
-  display: flex;
-  flex-wrap: nowrap; /* Jangan wrap, tetap satu baris */
+  display: flex; /* Menggunakan Flexbox untuk 3 kolom sejajar */
   gap: 1rem;
   margin-bottom: 1rem;
-  align-items: center; /* Semua item center vertikal */
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #dee2e6;
+  align-items: flex-end; /* Align items ke bawah agar label dan input sejajar */
 }
 
-.filter-item {
+.filter-column {
   display: flex;
-  flex-direction: row; /* Label dan select sejajar horizontal */
+  flex-direction: row; /* Label di kiri, input di kanan */
   align-items: center; /* Vertikal center */
-  gap: 0.75rem;
-  flex: 1 1 0; /* Bagi rata ruang tersedia */
-  min-width: 0; /* Izinkan shrink */
+  gap: 0.5rem;
+  flex: 1; /* Setiap kolom mengambil lebar yang sama */
 }
 
-.filter-item.btn-wrapper {
-  justify-content: flex-end; /* Tombol di kanan */
-  flex: 0 0 auto; /* Jangan grow, ukuran sesuai konten */
-}
-
-.filter-item label {
+.filter-column label {
   font-weight: 600;
   color: #495057;
   font-size: 0.9rem;
   white-space: nowrap;
-  min-width: 100px; /* Lebar minimum label */
+  margin-bottom: 0; /* Reset margin */
 }
 
-.filter-item select {
+.filter-column select,
+.btn-reload {
   padding: 0.6rem 0.75rem;
   border: 1px solid #ced4da;
   border-radius: 4px;
@@ -153,12 +147,12 @@ h1 {
   background-color: #fff;
   cursor: pointer;
   transition: border-color 0.2s;
-  flex: 1; /* Select mengambil sisa ruang */
-  min-width: 180px;
   height: 42px; /* Tinggi eksplisit */
+  flex: 1; /* Input dan tombol mengisi sisa ruang */
+  box-sizing: border-box;
 }
 
-.filter-item select:focus {
+.filter-column select:focus {
   outline: none;
   border-color: #800000;
   box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
@@ -168,18 +162,13 @@ h1 {
   background-color: #800000;
   color: white;
   border: none;
-  padding: 0.6rem 1.25rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 42px; /* Samakan tinggi dengan select */
   white-space: nowrap;
+  margin-bottom: 0; /* Reset margin */
 }
 
 .btn-reload:hover {
@@ -193,19 +182,10 @@ h1 {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .filter-controls {
-    flex-direction: column;
+    grid-template-columns: 1fr; /* Stack vertikal di mobile */
   }
   
-  .filter-item {
+  .filter-column {
     width: 100%;
-  }
-  
-  .filter-item.btn-wrapper {
-    justify-content: center;
-  }
-  
-  .btn-reload {
-    width: 100%;
-    justify-content: center;
   }
 }
