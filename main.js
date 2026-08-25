@@ -19,7 +19,7 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbyvxPCCJFv6QdD9BKsb2_
 // FASE 4: Local Storage - Memuat nama pegawai terakhir yang dipilih
 document.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('lastSelectedEmployee');
-    if (savedName && namaPegawai.includes(savedName)) {
+    if (savedName) {
         searchInput.value = savedName;
         hiddenInput.value = savedName;
     }
