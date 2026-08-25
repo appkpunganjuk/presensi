@@ -1,56 +1,41 @@
 ```
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-dist/
-build/
+# Configuration and data files
+.env
+.env.local
+*.env.*
 
-# Dependencies
-.venv/
-venv/
-node_modules/
-
-# Logs and temp files
+# Logs and temporary files
 *.log
 *.tmp
 *.swp
 
-# Environment
-.env
-.env.local
-.env.*
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+
+# Build artifacts
+dist/
+build/
+target/
 
 # Editors
 .vscode/
 .idea/
 
-# Coverage reports
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
 coverage/
 htmlcov/
 .coverage
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# MyPy cache
-.mypy_cache/
-
-# Pytest cache
-.pytest_cache/
-
-# Distribution / packaging
-*.tar.gz
-*.whl
-*.egg-info/
-
-# IDE specific
-*.swp
-*.swo
-
-# Compression formats
+# Compressed files
 *.zip
 *.gz
 *.tar
@@ -69,31 +54,8 @@ Thumbs.db
 *.Z
 *.lz
 *.lzo
-
-# Java
-*.class
-*.jar
-*.war
-*.ear
-target/
-.gradle/
-
-# C/C++
-*.so
-*.dll
-*.a
-*.out
-
-# Python specific
-*.pyo
-*.pyd
-*.egg
-
-# Web
-*.min.js
-*.min.css
-
-# Backup files
-*~
-\#*\#
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
