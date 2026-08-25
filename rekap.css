@@ -116,7 +116,7 @@ h1 {
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
-  align-items: flex-end;
+  align-items: center; /* Ubah ke center agar sejajar vertikal */
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 8px;
@@ -125,16 +125,18 @@ h1 {
 
 .filter-group {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-direction: row; /* Ubah ke row agar label dan select sejajar */
+  align-items: center;
+  gap: 0.75rem;
   flex: 1;
-  min-width: 200px;
+  min-width: 250px;
 }
 
 .filter-group label {
   font-weight: 600;
   color: #495057;
   font-size: 0.9rem;
+  white-space: nowrap; /* Mencegah label turun ke bawah */
 }
 
 .filter-group select {
@@ -145,6 +147,8 @@ h1 {
   background-color: #fff;
   cursor: pointer;
   transition: border-color 0.2s;
+  flex: 1; /* Select mengambil sisa ruang */
+  min-width: 180px;
 }
 
 .filter-group select:focus {
@@ -166,7 +170,8 @@ h1 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  height: fit-content;
+  height: 42px; /* Samakan tinggi dengan select */
+  white-space: nowrap;
 }
 
 .btn-reload:hover {
