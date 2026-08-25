@@ -3,10 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Content Security Policy (CSP) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://nominatim.openstreetmap.org https://script.google.com;">
     <link
       rel="icon"
       type="image/x-icon"
-      href="https://primemirza.github.io/20220801/logo.ico"
+      href="LOGO_KPU.png"
     />
     <title>Presensi Pegawai</title>
     <link
@@ -38,6 +40,13 @@
           <label for="map">Lokasi Presensi:</label>
           <div class="map-container">
             <div id="map"></div>
+            <div class="gps-status" id="gps-status">
+              <i class="fa-solid fa-circle-notch fa-spin"></i> Mencari sinyal GPS...
+            </div>
+            <div class="location-loading" id="location-loading">
+              <div class="spinner"></div>
+              <span>Mendeteksi lokasi...</span>
+            </div>
             <button type="button" id="reload-location" class="reload-button">
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
