@@ -6,43 +6,51 @@ __pycache__/
 *.obj
 dist/
 build/
-target/
 
 # Dependencies
 .venv/
 venv/
 node_modules/
-.julia/
-zig*/
-.mypy_cache/
-.pytest_cache/
-.gradle/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
 
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
 
 # Editors
 .vscode/
 .idea/
 
-# System files
-.DS_Store
-Thumbs.db
-
-# Coverage
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
 
-# Compressed files
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# MyPy cache
+.mypy_cache/
+
+# Pytest cache
+.pytest_cache/
+
+# Distribution / packaging
+*.tar.gz
+*.whl
+*.egg-info/
+
+# IDE specific
+*.swp
+*.swo
+
+# Compression formats
 *.zip
 *.gz
 *.tar
@@ -61,8 +69,31 @@ htmlcov/
 *.Z
 *.lz
 *.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+target/
+.gradle/
+
+# C/C++
+*.so
+*.dll
+*.a
+*.out
+
+# Python specific
+*.pyo
+*.pyd
+*.egg
+
+# Web
+*.min.js
+*.min.css
+
+# Backup files
+*~
+\#*\#
 ```
