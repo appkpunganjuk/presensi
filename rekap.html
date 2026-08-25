@@ -95,6 +95,30 @@
         pengisian Laporan Kinerja Harian perhari dapat dilihat pada kolom LKH.
       </div>
 
+      <!-- Filter Controls -->
+      <div class="filter-controls">
+        <div class="filter-group">
+          <label for="filter-nama"><i class="fa-solid fa-user"></i> Filter Nama:</label>
+          <select id="filter-nama">
+            <option value="">Semua Pegawai</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-jenis"><i class="fa-solid fa-list"></i> Filter Jenis:</label>
+          <select id="filter-jenis">
+            <option value="">Semua Jenis Presensi</option>
+            <option value="DATANG">Datang</option>
+            <option value="PULANG">Pulang</option>
+            <option value="DINAS LUAR">Dinas Luar</option>
+            <option value="WFH/ WFA MULAI">WFH/ WFA MULAI</option>
+            <option value="WFH/ WFA SELESAI">WFH/ WFA SELESAI</option>
+          </select>
+        </div>
+        <button id="btn-reload" class="btn-reload" title="Reload Data">
+          <i class="fa-solid fa-rotate-right"></i> Refresh Data
+        </button>
+      </div>
+
       <div class="table-container">
         <table id="rekap-table">
           <thead>

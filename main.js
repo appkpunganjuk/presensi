@@ -19,7 +19,7 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbyvxPCCJFv6QdD9BKsb2_
 // FASE 4: Local Storage - Memuat nama pegawai terakhir yang dipilih
 document.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('lastSelectedEmployee');
-    if (savedName) {
+    if (savedName && namaPegawai.includes(savedName)) {
         searchInput.value = savedName;
         hiddenInput.value = savedName;
     }
@@ -158,6 +158,8 @@ const updateResults = () => {
             item.addEventListener('click', () => {
                 searchInput.value = escapeHTML(name);
                 hiddenInput.value = escapeHTML(name);
+                // FASE 4: Local Storage - Simpan nama saat diklik dari dropdown
+                localStorage.setItem('lastSelectedEmployee', name);
                 searchResults.style.display = 'none';
             });
             searchResults.appendChild(item);
@@ -174,6 +176,15 @@ searchInput.addEventListener('input', () => {
         hiddenInput.value = '';
     }
     updateResults();
+});
+
+// FASE 4: Local Storage - Simpan nama pegawai saat dipilih dari dropdown
+searchInput.addEventListener('change', () => {
+    const selectedName = searchInput.value.trim();
+    if (selectedName && namaPegawai.includes(selectedName)) {
+        localStorage.setItem('lastSelectedEmployee', selectedName);
+        hiddenInput.value = selectedName;
+    }
 });
 
 document.addEventListener('click', (e) => {
