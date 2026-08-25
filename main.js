@@ -1,3 +1,10 @@
+// Fungsi sanitasi HTML untuk mencegah XSS
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 const namaPegawai = ["KRISTANTO", "MUHAMMAD IMAM SUBKHI", "AMINODIN", "DWI RIYANTO YUWONO", "ANANG SUBEKTI", "IMAM WAHYUDI", "WIJI RAHAYU", "TITAN TAWANG ILAL BILLHAQQI", "ALFA ALFIN MAGHFIROH", "WISNU PURNAMA", "SYAHRINDRA DZAKY RAMADHAN", "ANITA ROSANTI", "FATKUR ROZIKIN", "LINDA RISTIANI", "HENI RIASTUTIK", "ANANG ASY'ARI", "JASWADI", "AFRAN EFFENDI", "SEPTYAN WAHYU NUGROHO", "M. MIRZA SULTHONI", "SATRIO ADI WINUGROHO", "SEPTIAN RENDY CHARISMA PUTRA", "BELLA ANGGRAINI PUSPITA SARI", "JADMIKO", "SUGIANTO", "AGUS PRAYITNO", "TRIYONO", "JARMO", "TONI NURHUDA", "MUHAMMAD NOVAL FAJRUL HUDA"];
 
 const searchInput = document.getElementById('search-pegawai');
@@ -20,8 +27,26 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let marker;
 
+const gpsStatus = document.getElementById('gps-status');
+
+function updateGPSStatus(status, message) {
+  if (!gpsStatus) return;
+  
+  if (status === 'searching') {
+    gpsStatus.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Mencari sinyal GPS...';
+    gpsStatus.className = 'gps-status';
+  } else if (status === 'active') {
+    gpsStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> GPS Aktif - Lokasi terkunci';
+    gpsStatus.className = 'gps-status active';
+  } else if (status === 'error') {
+    gpsStatus.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + message;
+    gpsStatus.className = 'gps-status error';
+  }
+}
+
 async function getAddress(lat, lon) {
     try {
+        alamatTextarea.value = "Mengambil alamat...";
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
         const data = await response.json();
         if (data && data.display_name) {
@@ -35,7 +60,22 @@ async function getAddress(lat, lon) {
     }
 }
 
+const locationLoading = document.getElementById('location-loading');
+
+function showLoading() {
+    if (locationLoading) {
+        locationLoading.classList.add('active');
+    }
+}
+
+function hideLoading() {
+    if (locationLoading) {
+        locationLoading.classList.remove('active');
+    }
+}
+
 function onLocationFound(e) {
+    hideLoading();
     const latlng = e.latlng;
     if (marker) {
         map.removeLayer(marker);
@@ -43,6 +83,7 @@ function onLocationFound(e) {
     marker = L.marker(latlng).addTo(map).bindPopup("Lokasi Anda saat ini").openPopup();
     map.setView(latlng, 16); // Zoom to user's location
     getAddress(latlng.lat, latlng.lng);
+    updateGPSStatus('active');
 
     if (petaUrlInput) {
         // Membuat URL Embed OpenStreetMap agar konsisten dengan Leaflet
@@ -56,9 +97,27 @@ function onLocationFound(e) {
 }
 
 function onLocationError(e) {
+    hideLoading();
+    // Menangani kasus ketika pengguna menolak izin lokasi
+    let errorMessage = 'Tidak bisa mendapatkan lokasi Anda.';
+    let displayMessage = 'Gagal mendapatkan lokasi';
+    
+    if (e.code === e.PERMISSION_DENIED) {
+        errorMessage = 'Mohon izinkan akses lokasi di browser Anda untuk melakukan presensi. Silakan refresh halaman dan berikan izin lokasi.';
+        displayMessage = 'Izin lokasi ditolak';
+    } else if (e.code === e.POSITION_UNAVAILABLE) {
+        errorMessage = 'Informasi lokasi tidak tersedia. Pastikan GPS Anda aktif.';
+        displayMessage = 'GPS tidak tersedia';
+    } else if (e.code === e.TIMEOUT) {
+        errorMessage = 'Waktu permintaan lokasi habis. Silakan coba lagi.';
+        displayMessage = 'Waktu habis';
+    }
+    
+    updateGPSStatus('error', displayMessage);
+    
     Swal.fire({
         title: 'Gagal',
-        text: 'Tidak bisa mendapatkan lokasi Anda. Pastikan Anda mengizinkan akses lokasi.',
+        text: errorMessage,
         icon: 'error',
         confirmButtonColor: '#800000'
     });
@@ -66,7 +125,9 @@ function onLocationError(e) {
 }
 
 function locateUser() {
+    showLoading();
     alamatTextarea.value = "Mendeteksi lokasi...";
+    updateGPSStatus('searching');
     map.locate({setView: true, maxZoom: 16});
 }
 
@@ -78,15 +139,16 @@ document.addEventListener('DOMContentLoaded', locateUser);
 const updateResults = () => {
     const query = searchInput.value.toUpperCase();
     const filteredNames = namaPegawai.filter(name => name.toUpperCase().includes(query));
-    searchResults.innerHTML = '';
+    searchResults.innerHTML = ''; // Sudah aman karena tidak menggunakan innerHTML dengan user input langsung
     if (filteredNames.length > 0) {
         filteredNames.forEach(name => {
             const item = document.createElement('div');
             item.classList.add('search-item');
-            item.textContent = name;
+            // Menggunakan textContent yang sudah aman dari XSS
+            item.textContent = escapeHTML(name);
             item.addEventListener('click', () => {
-                searchInput.value = name;
-                hiddenInput.value = name;
+                searchInput.value = escapeHTML(name);
+                hiddenInput.value = escapeHTML(name);
                 searchResults.style.display = 'none';
             });
             searchResults.appendChild(item);
