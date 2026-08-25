@@ -109,3 +109,86 @@ h1 {
   color: #fff; /* Teks putih */
   background-color: #198754; /* Latar hijau */
 }
+
+/* Filter Controls Styles */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-end;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.filter-group select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #800000;
+  box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
+}
+
+.btn-reload {
+  background-color: #800000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: fit-content;
+}
+
+.btn-reload:hover {
+  background-color: #5a0000;
+}
+
+.btn-reload:active {
+  transform: scale(0.98);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-controls {
+    flex-direction: column;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+  
+  .btn-reload {
+    width: 100%;
+    justify-content: center;
+  }
+}
