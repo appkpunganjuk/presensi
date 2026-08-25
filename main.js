@@ -6,6 +6,9 @@ function escapeHTML(str) {
 }
 
 let namaPegawai = [];
+let turnstileWidgetId = null;
+let turnstileToken = '';
+
 const searchInput = document.getElementById('search-pegawai');
 const searchResults = document.getElementById('search-results');
 const hiddenInput = document.getElementById('nama-pegawai');
@@ -13,6 +16,7 @@ const petaUrlInput = document.getElementById('peta-url');
 const form = document.forms['presensi-form'];
 const alamatTextarea = document.getElementById('alamat');
 const reloadLocationButton = document.getElementById('reload-location');
+const turnstileWidget = document.getElementById('turnstile-widget');
 
 async function loadPegawaiData() {
     try {
@@ -228,8 +232,60 @@ document.addEventListener('click', (e) => {
     if (!searchResults.contains(e.target) && e.target !== searchInput) searchResults.style.display = 'none';
 });
 
-form.addEventListener('submit', (e) => {
+function initializeTurnstile() {
+    if (!turnstileWidget || turnstileWidgetId !== null) return;
+
+    if (typeof window.turnstile === 'undefined') {
+        window.setTimeout(initializeTurnstile, 100);
+        return;
+    }
+
+    turnstileWidgetId = window.turnstile.render(turnstileWidget, {
+        sitekey: CONFIG.TURNSTILE_SITE_KEY,
+        theme: 'auto',
+        callback: (token) => {
+            turnstileToken = token;
+        },
+        'expired-callback': () => {
+            turnstileToken = '';
+        },
+        'error-callback': () => {
+            turnstileToken = '';
+        }
+    });
+}
+
+initializeTurnstile();
+
+function resetTurnstile() {
+    turnstileToken = '';
+    if (turnstileWidgetId !== null && typeof window.turnstile !== 'undefined') {
+        window.turnstile.reset(turnstileWidgetId);
+    }
+}
+
+async function getSessionToken() {
+    const response = await fetch(`${scriptURL}?action=session&_=${Date.now()}`, {
+        method: 'GET',
+        cache: 'no-store'
+    });
+
+    if (!response.ok) {
+        throw new Error('Gagal mendapatkan session token.');
+    }
+
+    const result = await response.json();
+
+    if (!result || result.result !== 'success' || !result.token) {
+        throw new Error(result?.error || 'Session token tidak tersedia.');
+    }
+
+    return result.token;
+}
+
+form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const submitButton = form.querySelector('button[type="submit"]');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -246,41 +302,64 @@ form.addEventListener('submit', (e) => {
         Swal.fire({ title: 'Peringatan', text: 'Lokasi belum berhasil dideteksi. Mohon tunggu atau muat ulang lokasi.', icon: 'warning', confirmButtonColor: '#800000' });
         return;
     }
+    if (!turnstileToken) {
+        Swal.fire({ title: 'Peringatan', text: 'Silakan selesaikan verifikasi keamanan terlebih dahulu.', icon: 'warning', confirmButtonColor: '#800000' });
+        return;
+    }
 
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
 
-    fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Presensi';
+    try {
+        const sessionToken = await getSessionToken();
+        formData.append('session-token', sessionToken);
+        formData.append('turnstile-token', turnstileToken);
 
-            if (response.ok) {
-                localStorage.setItem('lastSelectedEmployee', data['nama-pegawai']);
-                Swal.fire({
-                    title: 'Selesai!',
-                    text: 'Data presensi Anda telah terekam...',
-                    icon: 'success',
-                    confirmButtonColor: '#800000'
-                }).then(() => {
-                    window.location.href = 'rekap.html';
-                });
-            } else {
-                response.json().then(result => {
-                    let errorMessage = 'Gagal mengirim presensi. Coba lagi.';
-                    if (result && result.error) errorMessage += `\nDetail: ${escapeHTML(result.error)}`;
-                    Swal.fire({ title: 'Gagal', text: escapeHTML(errorMessage), icon: 'error', confirmButtonColor: '#800000' });
-                }).catch(() => {
-                    Swal.fire({ title: 'Gagal', text: 'Gagal mengirim presensi karena kesalahan server.', icon: 'error', confirmButtonColor: '#800000' });
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error!', error.message);
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Presensi';
-            Swal.fire({ title: 'Gagal', text: 'Gagal mengirim presensi karena masalah koneksi.', icon: 'error', confirmButtonColor: '#800000' });
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            body: formData
         });
+
+        if (!response.ok) {
+            throw new Error(`Server merespons HTTP ${response.status}.`);
+        }
+
+        const result = await response.json();
+
+        if (result && result.result === 'success') {
+            localStorage.setItem('lastSelectedEmployee', data['nama-pegawai']);
+            resetTurnstile();
+            Swal.fire({
+                title: 'Selesai!',
+                text: 'Data presensi Anda telah terekam...',
+                icon: 'success',
+                confirmButtonColor: '#800000'
+            }).then(() => {
+                window.location.href = 'rekap.html';
+            });
+        } else {
+            resetTurnstile();
+            const errorMessage = result?.error || 'Gagal mengirim presensi. Coba lagi.';
+            Swal.fire({
+                title: 'Gagal',
+                text: escapeHTML(errorMessage),
+                icon: 'error',
+                confirmButtonColor: '#800000'
+            });
+        }
+    } catch (error) {
+        console.error('Error!', error.message);
+        resetTurnstile();
+        Swal.fire({
+            title: 'Gagal',
+            text: error.message || 'Gagal mengirim presensi karena masalah koneksi.',
+            icon: 'error',
+            confirmButtonColor: '#800000'
+        });
+    } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim';
+    }
 });
 
 document.getElementById('current-year').textContent = new Date().getFullYear();
