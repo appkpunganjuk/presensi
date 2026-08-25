@@ -16,6 +16,15 @@ const alamatTextarea = document.getElementById('alamat');
 const reloadLocationButton = document.getElementById('reload-location');
 const scriptURL = 'https://script.google.com/macros/s/AKfycbyvxPCCJFv6QdD9BKsb2_DiL0UJG0wAQwlrHACafSP4BZhj7Z9Ilm13F9feeDxUMb0_IQ/exec';
 
+// FASE 4: Local Storage - Memuat nama pegawai terakhir yang dipilih
+document.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem('lastSelectedEmployee');
+    if (savedName && namaPegawai.includes(savedName)) {
+        searchInput.value = savedName;
+        hiddenInput.value = savedName;
+    }
+});
+
 // Initialize map
 const map = L.map('map', {
     dragging: !L.Browser.mobile,          // Matikan geser peta (panning) hanya di HP
@@ -205,6 +214,9 @@ form.addEventListener('submit', (e) => {
             submitButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Presensi';
 
             if (response.ok) {
+                // FASE 4: Local Storage - Simpan nama pegawai yang dipilih
+                localStorage.setItem('lastSelectedEmployee', data['nama-pegawai']);
+                
                 Swal.fire({
                     title: 'Selesai!',
                     text: 'Data presensi Anda telah terekam...',
