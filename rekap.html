@@ -97,13 +97,13 @@
 
       <!-- Filter Controls -->
       <div class="filter-controls">
-        <div class="filter-group">
+        <div class="filter-item">
           <label for="filter-nama"><i class="fa-solid fa-user"></i> Filter Nama:</label>
           <select id="filter-nama">
             <option value="">Semua Pegawai</option>
           </select>
         </div>
-        <div class="filter-group">
+        <div class="filter-item">
           <label for="filter-jenis"><i class="fa-solid fa-list"></i> Filter Jenis:</label>
           <select id="filter-jenis">
             <option value="">Semua Jenis Presensi</option>
@@ -114,9 +114,11 @@
             <option value="WFH/ WFA SELESAI">WFH/ WFA SELESAI</option>
           </select>
         </div>
-        <button id="btn-reload" class="btn-reload" title="Reload Data">
-          <i class="fa-solid fa-rotate-right"></i> Refresh Data
-        </button>
+        <div class="filter-item btn-wrapper">
+          <button id="btn-reload" class="btn-reload" title="Reload Data">
+            <i class="fa-solid fa-rotate-right"></i> Refresh Data
+          </button>
+        </div>
       </div>
 
       <div class="table-container">
