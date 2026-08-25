@@ -47,9 +47,9 @@ loadPegawaiData();
 
 // Initialize map
 const map = L.map('map', {
-    dragging: !L.Browser.mobile,          // Matikan geser peta (panning) hanya di HP
-    touchZoom: L.Browser.mobile ? 'center' : true // Zoom selalu fokus ke tengah di HP
-}).setView([-7.6035, 111.9011], 13); // Default view (Nganjuk)
+    dragging: !L.Browser.mobile,
+    touchZoom: L.Browser.mobile ? 'center' : true
+}).setView([-7.6035, 111.9011], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
@@ -235,11 +235,8 @@ document.addEventListener('click', (e) => {
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const submitButton = form.querySelector('button[type="submit"]');
-    const originalButtonContent = submitButton.innerHTML;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-
-    console.log(formData)
 
     // Validation
     if (!data['nama-pegawai']) {
