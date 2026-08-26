@@ -6,10 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('petaModal');
   const modalFrame = document.getElementById('petaFrame');
   const modalTitle = document.getElementById('petaModalTitle');
-  const closeModal = document.querySelector('.close-modal');
-  const filterNama = document.getElementById('filter-nama');
-  const filterJenis = document.getElementById('filter-jenis');
+  const closeModal = document.querySelector('.close-modal:not(.close-filter-modal)');
+  const filterModal = document.getElementById('filter-modal');
+  const closeFilterModal = document.querySelector('.close-filter-modal');
+  const btnFilter = document.getElementById('btn-filter');
   const btnReload = document.getElementById('btn-reload');
+  const filterNama = document.getElementById('filter-nama-modal');
+  const filterJenis = document.getElementById('filter-jenis-modal');
   const scriptURL = CONFIG.REKAP_SCRIPT_URL;
   const mode = CONFIG.PRESENSI_MODE;
   let allData = [];
@@ -32,12 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
     modalFrame.src = '';
   }
 
+  function closeFilterDialog() {
+    filterModal.style.display = 'none';
+    filterModal.setAttribute('aria-hidden', 'true');
+    btnFilter.setAttribute('aria-expanded', 'false');
+  }
+
+  function openFilterDialog() {
+    filterModal.style.display = 'flex';
+    filterModal.setAttribute('aria-hidden', 'false');
+    btnFilter.setAttribute('aria-expanded', 'true');
+  }
+
   if (closeModal) closeModal.addEventListener('click', closeMapModal);
+  if (closeFilterModal) closeFilterModal.addEventListener('click', closeFilterDialog);
+  if (btnFilter) btnFilter.addEventListener('click', openFilterDialog);
+
   window.addEventListener('click', event => {
     if (event.target === modal) closeMapModal();
+    if (event.target === filterModal) closeFilterDialog();
   });
   window.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && modal.style.display === 'flex') closeMapModal();
+    if (event.key !== 'Escape') return;
+    if (modal.style.display === 'flex') closeMapModal();
+    if (filterModal.style.display === 'flex') closeFilterDialog();
   });
 
   function calculateJamPulang(waktuMulai, hariKe) {
@@ -140,7 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.length > 0) {
         allData = data.sort((a, b) => new Date(a.WAKTU) - new Date(b.WAKTU));
+        const selectedNama = filterNama.value;
+        const selectedJenis = filterJenis.value;
         populateFilters(allData);
+        filterNama.value = selectedNama;
+        filterJenis.value = selectedJenis;
         renderTable(allData);
       } else {
         tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Tidak ada data untuk ditampilkan.</td></tr>';
@@ -157,10 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnReload.addEventListener('click', () => {
     btnReload.disabled = true;
-    btnReload.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+    btnReload.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
     fetchRekapData().finally(() => {
       btnReload.disabled = false;
-      btnReload.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Refresh Data';
+      btnReload.innerHTML = '<i class="fa-solid fa-rotate-right"></i>';
     });
   });
 
