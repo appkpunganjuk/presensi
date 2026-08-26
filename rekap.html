@@ -7,7 +7,7 @@
     <title>Rekap Presensi Harian</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="rekap.css?v=1.2" />
+    <link rel="stylesheet" href="rekap.css?v=1.3" />
   </head>
   <body>
     <div class="container">
@@ -18,7 +18,7 @@
         setelah selesai mengisi presensi Pulang atau Dinas Luar. Status pengisian Laporan Kinerja Harian perhari dapat dilihat pada kolom LKH.
       </div>
 
-      <div class="filter-controls">
+      <div class="filter-controls" id="filter-controls">
         <div class="filter-column">
           <label for="filter-nama"><i class="fa-solid fa-user"></i> Filter Nama:</label>
           <select id="filter-nama"><option value="">Semua Pegawai</option></select>
@@ -27,15 +27,12 @@
           <label for="filter-jenis"><i class="fa-solid fa-list"></i> Filter Jenis:</label>
           <select id="filter-jenis">
             <option value="">Semua Jenis Presensi</option>
-            <option value="DATANG">Datang</option>
-            <option value="PULANG">Pulang</option>
-            <option value="DINAS LUAR">Dinas Luar</option>
+            <option value="DATANG">DATANG</option>
+            <option value="PULANG">PULANG</option>
+            <option value="DINAS LUAR">DINAS LUAR</option>
             <option value="WFH/ WFA MULAI">WFH/ WFA MULAI</option>
             <option value="WFH/ WFA SELESAI">WFH/ WFA SELESAI</option>
           </select>
-        </div>
-        <div class="filter-column">
-          <button id="btn-reload" class="btn-reload" title="Reload Data"><i class="fa-solid fa-rotate-right"></i> Refresh Data</button>
         </div>
       </div>
 
@@ -46,6 +43,41 @@
         </table>
       </div>
       <div id="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data...</div>
+    </div>
+
+    <div class="floating-actions" aria-label="Aksi rekap">
+      <button type="button" id="btn-filter" class="floating-action filter-action" title="Filter data" aria-label="Filter data" aria-controls="filter-modal" aria-expanded="false">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+      <button type="button" id="btn-reload" class="floating-action reload-action" title="Reload data" aria-label="Reload data">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+
+    <div id="filter-modal" class="modal filter-modal" aria-hidden="true">
+      <div class="modal-content filter-modal-content" role="dialog" aria-modal="true" aria-labelledby="filterModalTitle">
+        <div class="modal-header">
+          <h2 id="filterModalTitle">Filter Rekap Presensi</h2>
+          <button type="button" class="close-modal close-filter-modal" aria-label="Tutup filter"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="filter-modal-body">
+          <div class="filter-column">
+            <label for="filter-nama-modal">Filter Nama:</label>
+            <select id="filter-nama-modal" aria-label="Filter Nama"></select>
+          </div>
+          <div class="filter-column">
+            <label for="filter-jenis-modal">Filter Jenis:</label>
+            <select id="filter-jenis-modal" aria-label="Filter Jenis">
+              <option value="">Semua Jenis Presensi</option>
+              <option value="DATANG">DATANG</option>
+              <option value="PULANG">PULANG</option>
+              <option value="DINAS LUAR">DINAS LUAR</option>
+              <option value="WFH/ WFA MULAI">WFH/ WFA MULAI</option>
+              <option value="WFH/ WFA SELESAI">WFH/ WFA SELESAI</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="petaModal" class="modal" aria-hidden="true">
