@@ -7,7 +7,7 @@
     <title>Rekap Presensi Harian</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="rekap.css?v=1.3" />
+    <link rel="stylesheet" href="rekap.css?v=1.4" />
   </head>
   <body>
     <div class="container">
@@ -58,7 +58,6 @@
       <div class="modal-content filter-modal-content" role="dialog" aria-modal="true" aria-labelledby="filterModalTitle">
         <div class="modal-header">
           <h2 id="filterModalTitle">Filter Rekap Presensi</h2>
-          <button type="button" class="close-modal close-filter-modal" aria-label="Tutup filter"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="filter-modal-body">
           <div class="filter-column">
@@ -76,6 +75,9 @@
               <option value="WFH/ WFA SELESAI">WFH/ WFA SELESAI</option>
             </select>
           </div>
+        </div>
+        <div class="filter-modal-footer">
+          <button type="button" id="btn-filter-ok" class="filter-ok-button">OK</button>
         </div>
       </div>
     </div>
