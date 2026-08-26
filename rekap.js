@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('petaModal');
   const modalFrame = document.getElementById('petaFrame');
   const modalTitle = document.getElementById('petaModalTitle');
-  const closeModal = document.querySelector('.close-modal:not(.close-filter-modal)');
+  const closeModal = document.querySelector('#petaModal .close-modal');
   const filterModal = document.getElementById('filter-modal');
-  const closeFilterModal = document.querySelector('.close-filter-modal');
   const btnFilter = document.getElementById('btn-filter');
+  const btnFilterOk = document.getElementById('btn-filter-ok');
   const btnReload = document.getElementById('btn-reload');
   const filterNama = document.getElementById('filter-nama-modal');
   const filterJenis = document.getElementById('filter-jenis-modal');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (closeModal) closeModal.addEventListener('click', closeMapModal);
-  if (closeFilterModal) closeFilterModal.addEventListener('click', closeFilterDialog);
+  if (btnFilterOk) btnFilterOk.addEventListener('click', closeFilterDialog);
   if (btnFilter) btnFilter.addEventListener('click', openFilterDialog);
 
   window.addEventListener('click', event => {
